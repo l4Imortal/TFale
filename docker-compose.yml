@@ -3,14 +3,14 @@ services:
   postgres:
     build:
       context: ./postgres
-    container_name: postgres_db
+    container_name: postgres_db_new
     restart: always
     environment:
       POSTGRES_DB: escola
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
     ports:
-      - "5432:5432"
+      - "5433:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
 
