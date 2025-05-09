@@ -1,0 +1,54 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres:latest
+    container_name: school_postgres
+    environment:
+      POSTGRES_USER: school_user
+      POSTGRES_PASSWORD: school_password
+      POSTGRES_DB: school_db
+    volumes:
+      - ./postgres/init.sql:/docker-entrypoint-initdb.d/init.sql
+      - ./postgres/postgres.conf:/etc/postgresql/postgresql.conf
+    ports:
+      - "5432:5432"
+    networks:
+      - school_network
+
+  postgres_exporter:
+    image: wrouesnel/postgres_exporter:latest
+    container_name: school_postgres_exporter
+    environment:
+      DATA_SOURCE_NAME: "postgres://school_user:school_password@postgres:5432/school_db?sslmode=disable"
+    ports:
+      - "9187:9187"
+    networks:
+      - school_network
+    depends_on:
+      - postgres
+
+  prometheus:
+    image: prom/prometheus:latest
+    container_name: school_prometheus
+    volumes:
+      - ./prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
+    ports:
+      - "9090:9090"
+    networks:
+      - school_network
+
+  grafana:
+    image: grafana/grafana:latest
+    container_name: school_grafana
+    volumes:
+      - ./grafana/provisioning/datasources/datasource.yml:/etc/grafana/provisioning/datasources/datasource.yml
+      - ./grafana/provisioning/dashboards/school-dashboard.json:/etc/grafana/provisioning/dashboards/school-dashboard.json
+    ports:
+      - "3000:3000"
+    networks:
+      - school_network
+
+networks:
+  school_network:
+    driver: bridge

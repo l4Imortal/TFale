@@ -1,0 +1,80 @@
+{
+  "annotations": {
+    "title": "School Management System Dashboard",
+    "description": "Dashboard for monitoring PostgreSQL metrics in the School Management System."
+  },
+  "panels": [
+    {
+      "type": "graph",
+      "title": "PostgreSQL Connections",
+      "targets": [
+        {
+          "expr": "pg_stat_activity_count",
+          "legendFormat": "{{instance}}"
+        }
+      ],
+      "xaxis": {
+        "mode": "time"
+      },
+      "yaxes": [
+        {
+          "format": "short"
+        },
+        {
+          "format": "short"
+        }
+      ]
+    },
+    {
+      "type": "graph",
+      "title": "Database Size",
+      "targets": [
+        {
+          "expr": "pg_database_size{datname='your_database_name'}",
+          "legendFormat": "{{instance}}"
+        }
+      ],
+      "xaxis": {
+        "mode": "time"
+      },
+      "yaxes": [
+        {
+          "format": "bytes"
+        },
+        {
+          "format": "bytes"
+        }
+      ]
+    },
+    {
+      "type": "graph",
+      "title": "Query Performance",
+      "targets": [
+        {
+          "expr": "rate(pg_stat_statements_total_time[5m])",
+          "legendFormat": "{{instance}}"
+        }
+      ],
+      "xaxis": {
+        "mode": "time"
+      },
+      "yaxes": [
+        {
+          "format": "ms"
+        },
+        {
+          "format": "ms"
+        }
+      ]
+    }
+  ],
+  "schemaVersion": 26,
+  "version": 1,
+  "links": [],
+  "refresh": "5s",
+  "time": {
+    "from": "now-1h",
+    "to": "now"
+  },
+  "timezone": "utc"
+}
